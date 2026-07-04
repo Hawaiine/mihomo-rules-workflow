@@ -4,6 +4,7 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 RULESET_DIR="$PROJECT_ROOT/ruleset"
+mkdir -p "$RULESET_DIR"
 RAW_V2FLY="https://raw.githubusercontent.com/v2fly/domain-list-community/master/data"
 RAW_LOYAL_BASE="https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release"
 
