@@ -1,8 +1,0 @@
-.env
-*.secret
-providers/airport1.yaml
-providers/nodes.yaml
-tmp/
-*.log
-.DS_Store
-Thumbs.db
