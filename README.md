@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"/>
-  <img alt="Hermes Skill" src="https://img.shields.io/badge/Hermes-Skill-v2.0-purple?style=flat-square"/>
+  <img alt="Hermes Skill" src="https://img.shields.io/badge/Hermes-Skill-v2.0-blueviolet?style=flat-square"/>
   <img alt="Project" src="https://img.shields.io/badge/ref-Hawaiine/mihomo--rules-blue?style=flat-square"/>
 </p>
 
