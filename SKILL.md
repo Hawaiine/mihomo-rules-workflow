@@ -7,7 +7,7 @@ description: >-
   configs (Nikki/Clash for Android), syncing icons from Oasisic-Icons, and
   operating the associated GitHub Actions CI/CD pipeline. Covers the
   Hawaiine/mihomo-rules project conventions.
-version: 2.1.0
+version: 2.2.0
 author: Hermes Agent
 license: MIT
 metadata:
@@ -233,17 +233,18 @@ bash scripts/sync-icons.sh
 
 ```
 default-nameserver: 223.5.5.5, 119.29.29.29        ← 仅解析 nameserver 域名 IP
-nameserver:         doh.pub, dns.alidns.com DoH     ← 国内 DoH 主力（带 UDP 兜底）
-proxy-server-ns:    doh.pub, dns.alidns.com DoH     ← 全国内！代理服务器专用（防死循环）
+nameserver:         doh.pub, dns.alidns.com DoH     ← 国内 DoH 主力（含 UDP 兜底 119.29.29.29/223.5.5.5）
+proxy-server-ns:    doh.pub, dns.alidns.com DoH     ← 全国内！代理服务器专用（含 UDP 兜底）
 nameserver-policy:
-  geosite:private,cn        → 国内 DNS             ← 按 geosite 分流
-  geosite:geolocation-!cn   → 1.1.1.1, dns.google   ← 国际 DNS（8.8.8.8→dns.google）
-fallback:                   1.1.1.1, dns.google DoH ← 兜底（并发查询，取最快）
+  geosite:private,cn        → 国内 DNS（含 UDP 兜底）← 按 geosite 分流
+  geosite:geolocation-!cn   → cloudflare-dns.com, dns.google（含 UDP 兜底）
+fallback:                   cloudflare-dns.com, dns.google（含 UDP 兜底 1.1.1.1/8.8.8.8）
 fallback-filter:            geoip:cn + ipcidr       ← CN 域名不经过 fallback (geosite 已废弃移除)
 fake-ip-filter:             +.lan, +.local, +.corp,
                             +.pool.ntp.org, +.time.apple.com,
                             +.time.google.com       ← NTP 域名走真实 IP
-skip-domain (sniffer):      +.apple.com             ← Apple CDN 保留 DNS mapping
+skip-domain (sniffer):      +.apple.com, +.digicert.com, +.microsoft.com
+                            ← Apple/证书/CDN 保留 DNS mapping
 ```
 
 端口：
@@ -302,9 +303,12 @@ esac
 ### Config Key 顺序（官方规范）
 
 ```
-mixed-port → allow-lan → bind-address → find-process-mode → mode →
-geox-url → log-level → ipv6 → external-controller → profile →
-tun → dns → proxy-providers → proxy-groups → rule-providers → rules
+mixed-port → port → socks-port → allow-lan → bind-address → mode →
+log-level → ipv6 → keep-alive-interval → keep-alive-idle → find-process-mode →
+external-controller → secret → external-ui → external-ui-name → external-ui-url →
+profile → unified-delay → tcp-concurrent → geodata-loader →
+geo-auto-update → geo-update-interval → geox-url →
+tun → dns → sniffer → proxy-providers → proxy-groups → rule-providers → rules
 ```
 
 ## 常见陷阱
@@ -321,6 +325,11 @@ tun → dns → proxy-providers → proxy-groups → rule-providers → rules
 10. **fallback-filter.geosite 已废弃**：用 `nameserver-policy` 替代，`geosite:gfw` 被子集 `geolocation-!cn` 覆盖
 11. **自动选择/故障转移不要放 DIRECT**：直交由规则层处理，代理组只留真实节点
 12. **geox-url 用 Wiki 推荐**：`testingcf.jsdelivr.net`（国内加速）+ 完整版文件 + `xishang0128` ASN
+13. **🎯 全球直连已移除**：全部用 `DIRECT` 关键字替代。品牌组/漏网之鱼/国内媒体都直接用 DIRECT，不再使用 🎯 组
+14. **DNS 必须加 UDP 兜底**：DoH 可能因 TLS 握手超时失败。所有 DNS 段（nameserver/fallback/nameserver-policy/proxy-server-ns）都要有 UDP 后备
+15. **注释对齐用后处理**：`generate-config.sh` 生成后自动跑 Python 脚本，所有行内 `#` 固定在 52 列
+16. **Discord embed 换行用 `$'\n'`**：bash 中 `\\n` 是字面文本。用 `$'\n'`（ANSI-C quoting）产生真正换行，`jq --arg` 才能正确序列化
+17. **disable-icmp-forwarding**：Nikki TUN 段加 `disable-icmp-forwarding: true`，防 ping 走代理
 
 ## 验证检查清单
 

@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=blue&style=flat-square"/>
-  <img alt="Hermes Skill" src="https://img.shields.io/static/v1?label=Hermes&message=Skill+v2.0&color=blueviolet&style=flat-square"/>
+  <img alt="Hermes Skill" src="https://img.shields.io/static/v1?label=Hermes&message=Skill+v2.2&color=blueviolet&style=flat-square"/>
   <img alt="Project" src="https://img.shields.io/static/v1?label=ref&message=Hawaiine/mihomo-rules&color=blue&style=flat-square"/>
 </p>
 
@@ -92,10 +92,10 @@ cp mihomo-rules-skill/SKILL.md ~/.hermes/skills/mihomo-rules-management/
 | 🛠️ **脚本工作流** | sync-upstream / validate / generate-config / sync-icons | ✅ |
 | 🌐 **上游同步** | 3 源合并逻辑、v2fly include 递归、cross-type 去重 | ✅ |
 | ⚙️ **配置生成** | 双平台、官方 key 顺序、DNS 三段分流、图标注入 | ✅ |
-| 📡 **DNS 规范** | nameserver / proxy-server-ns / nameserver-policy / fallback + geox-url Wiki 推荐 | ✅ |
-| 🎯 **策略组最佳实践** | 自动选择/故障转移不含 DIRECT，直交由规则层处理 | ✅ |
-| 🤖 **CI/CD** | daily-sync.yml 工作流、Discord embed 通知 | ✅ |
-| ⚠️ **常见陷阱** | include 递归、FE0F YAML、stats 污染、图标错配、阿里 DoH IP 直连不工作等 14 个 | ✅ |
+| 📡 **DNS 规范** | nameserver / proxy-server-ns / nameserver-policy / fallback 全段 UDP 兜底 + geox-url Wiki 推荐 | ✅ |
+| 🎯 **策略组最佳实践** | 自动选择/故障转移/品牌组不含 🎯 全球直连，DIRECT 替代全部 | ✅ |
+| 🤖 **CI/CD** | daily-sync.yml 工作流、Discord embed 通知（修复换行乱码） | ✅ |
+| ⚠️ **常见陷阱** | include 递归、FE0F YAML、stats 污染、图标错配、阿里 DoH IP 直连不工作、DNS UDP 兜底等 17 个 | ✅ |
 | ✅ **检查清单** | 16 项提交前验证标准 | ✅ |
 
 ---
