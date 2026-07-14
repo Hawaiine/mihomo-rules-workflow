@@ -336,7 +336,100 @@ asn:     https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-
 - `schedule` (06:00 BJT) → 全量 sync + validate + generate + push + Discord
 
 ## 验证检查清单
+## 关键配置参考
 
+### v2fly 品牌名映射
+
+```bash
+case "$brand" in
+  Porn) vname="category-porn" ;;
+  PornChina) vname="category-porn-china" ;;
+  X)    vname="twitter" ;;
+  *)    vname=$(echo "$brand" | tr '[:upper:]' '[:lower:]') ;;
+esac
+```
+
+### Loyalsoldier 品牌名映射
+
+```bash
+case "$brand" in
+  Telegram) lname="telegramcidr" ;;
+  X)        lname="twitter" ;;
+  *)        lname=$(echo "$brand" | tr '[:upper:]' '[:lower:]') ;;
+esac
+```
+
+### Discord Webhook Embed
+
+```json
+{
+  "embeds": [{
+    "title": "🔄 规则集已更新",
+    "description": "| 规则集 | 变更 |\n|--------|------|\n| Netflix | +8 条 |\n| Disney | +3 条 |",
+    "color": 5814783,
+    "thumbnail": {
+      "url": "https://raw.githubusercontent.com/MetaCubeX/mihomo/Meta/docs/logo.png"
+    },
+    "footer": { "text": "mihomo-rules · 自动同步", "icon_url": "..." },
+    "timestamp": "2026-07-07T14:30:00+08:00"
+  }]
+}
+```
+
+### Config Key 顺序（官方规范）
+
+```
+mixed-port → port → socks-port → allow-lan → bind-address → mode →
+log-level → ipv6 → keep-alive-interval → keep-alive-idle → find-process-mode →
+external-controller → secret → external-ui → external-ui-name → external-ui-url →
+profile → unified-delay → tcp-concurrent → geodata-loader →
+geo-auto-update → geo-update-interval → geox-url →
+tun → dns → sniffer → proxy-providers → proxy-groups → rule-providers → rules
+```
+
+## 常见陷阱
+
+1. **include 递归丢失原始内容**：`cat >> v2fly_all.txt` 前必须 `cp v2fly.txt v2fly_all.txt`
+2. **DOMAIN-KEYWORD 含有完整域名**：需转为 DOMAIN 条目（`DOMAIN-KEYWORD,example.com` → `DOMAIN,example.com`）
+3. **stats 行污染 payload**：awk END 块必须单行输出 `STATS`，不能多行 `printf`
+4. **YAML 解析 FE0F 字符**：`♻️` 后的变体选择符 `U+FE0F` 使 YAML 解析器报 `?`，必须移除
+5. **brand 组 YAML 格式**：必须用 `- name: "Brand"` 格式，不能用 `Brand:`（非序列项）
+6. **图标错配**：`X` 前缀匹配 `Xbox`，需硬编码修正或精确正则
+7. **Commit message 破坏 JSON**：必须用 `git log --format='%s'`（单行）
+8. **Porn/PornChina 不应在 README 公开**
+9. **阿里 DoH IP 直连不工作**：`https://223.5.5.5/dns-query` 不支持，必须用 `dns.alidns.com` 域名
+10. **fallback-filter.geosite 已废弃**：用 `nameserver-policy` 替代，`geosite:gfw` 被子集 `geolocation-!cn` 覆盖
+11. **自动选择/故障转移不要放 DIRECT**：直交由规则层处理，代理组只留真实节点
+12. **geox-url 用 Wiki 推荐**：`testingcf.jsdelivr.net`（国内加速）+ 完整版文件 + `xishang0128` ASN
+13. **🎯 全球直连已移除**：全部用 `DIRECT` 关键字替代。品牌组/漏网之鱼/国内媒体都直接用 DIRECT，不再使用 🎯 组
+14. **DNS 必须加 UDP 兜底**：DoH 可能因 TLS 握手超时失败。所有 DNS 段都要有 UDP 后备
+15. **注释对齐用后处理**：`generate-config.sh` 生成后自动跑 Python，行内 `#` 固定在 52 列
+16. **Discord embed 换行用 `$'\n'`**：bash 中 `\n` 是字面文本。用 `$'\n'`（ANSI-C quoting）产生真正换行
+17. **disable-icmp-forwarding**：Nikki TUN 段加 `disable-icmp-forwarding: true`，防 ping 走代理
+18. **bm7 域名同步已移除**：`fetch_bm7()` 只保留 IP-CIDR/IP-CIDR6/DOMAIN-REGEX/PROCESS-NAME，域名由 v2fly 主上游负责
+19. **Include 路由 vs 品牌过滤**：第一层路由将跨品牌域名转到对应规则集，第二层兜底防漏。新增泄漏只需扩展 `GITHUB_PATTERN`/`YOUTUBE_PATTERN` 变量
+20. **category-ads-all 已移除**：Reject 规则集（164k+ 条）已覆盖，`GEOSITE,category-ads-all` 从 config 中删除
+21. **sync-icons.sh 本地限流**：API 模式无 token 会被 GitHub 限流，设 `GITHUB_TOKEN` 或 `GH_TOKEN` 解决
+22. **min config 自动生成**：`config.min.yaml` 由 `generate-config.sh` 后处理自动生成，勿手动编辑
+
+## 验证检查清单
+
+- [ ] 新 ruleset 使用子目录 + PascalCase
+- [ ] Header 7 种计数与实际一致（含 DOMAIN-REGEX）
+- [ ] 无 `@ads`、`@cn` 等标签
+- [ ] 无 `# Source:` 行
+- [ ] 条目按类型分组，组内字母序
+- [ ] behavior 检测正确（71 domain / 34 classical）
+- [ ] config 按官方 key 顺序排列
+- [ ] config.min.yaml 自动生成与 config.yaml 同步
+- [ ] 品牌显示名映射正确
+- [ ] DNS 端口平台独立（Android 53 / Nikki 1053）
+- [ ] 图标同步无误（无 404）
+- [ ] `bash -n scripts/*.sh` 全部通过
+- [ ] `validate-ruleset.sh` 全部文件通过
+- [ ] `python3 -c "import yaml; yaml.safe_load(open(...))"` YAML 有效
+- [ ] 敏感信息未提交
+- [ ] README + CHANGELOG 已更新
 - [ ] 新 ruleset 使用子目录 + PascalCase
 - [ ] Header 7 种计数与实际一致（含 DOMAIN-REGEX）
 - [ ] 无 `@ads`、`@cn` 等标签
