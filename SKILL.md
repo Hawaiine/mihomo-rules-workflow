@@ -354,7 +354,12 @@ done
 - `post-2026-07-21`: 7 类型全量验证方法 — 重构 sync-upstream.sh 后必须逐类型 × 逐品牌与基座对比计数，不仅看总量
 - `post-2026-07-20`: route-rules.sh 类型覆盖限制 — IP-CIDR 不含域名关键词，grep -E 模式匹配无效，需改用对比去重模式
 - `post-2026-07-20`: 声明式路由模式 — route-rules.sh 替代 merge_write() 硬编码 case，每加一个路由只需加一行声明
-- `post-2026-07-19`: 删除 Nikki DNS 重复 sed（死代码，已被 DNS 段落覆盖）；清理 3 个重复自查脚本，统一 HEADER_ORDER 数据源（v2 动态读取 header-order.sh）
+- `post-2026-07-21`: route-rules.sh 新增 `^DOMAIN.*github` 和 `^DOMAIN-SUFFIX.*github` 兜底模式，捕获 copilot 子域名（copilot-telemetry.githubusercontent.com 等）
+- `post-2026-07-22`: 废弃 dedup-brands.sh, 统一品牌去重到 route-rules.sh — 新增 8 对父子品牌路由（Microsoft→OneDrive, Google→GoogleAI, Apple→iCloud/AppleTV, Amazon→PrimeVideo, Facebook→Instagram/Messenger/WhatsApp）
+- `post-2026-07-22`: 恢复 assert_sed_applied 校验函数（header-order.sh），generate-config.sh 中 4 处 sed 操作加校验
+- `post-2026-07-22`: extract_existing() `[ \t]` → `[[:space:]]` 修复（CR 穿透导致空值）
+- `post-2026-07-22`: 移除 Reject/Proxy 系统策略组硬编码图标
+- `post-2026-07-22`: 修复 RULE-SET,Applications 被误删于 Android 配置（死代码清理时移出 if 块）
 
 - `post-2026-07-19`: extract_existing() 尾空白匹配 `[ \\\\t]` → `[[:space:]]` 修复（CR 穿透导致空值根因）
 - `post-2026-07-19`: AWS 品牌规则集新增（v2fly data/aws，77 条规则），105→106 品牌

@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=blue&style=flat-square"/>
-  <img alt="Hermes Skill" src="https://img.shields.io/static/v1?label=Hermes&message=Skill+v2.3&color=blueviolet&style=flat-square"/>
+  <img alt="Hermes Skill" src="https://img.shields.io/static/v1?label=Hermes&message=Skill+v2.4&color=blueviolet&style=flat-square"/>
   <img alt="Project" src="https://img.shields.io/static/v1?label=ref&message=Hawaiine/mihomo-rules&color=blue&style=flat-square"/>
 </p>
 
@@ -42,7 +42,7 @@ mihomo-rules-skill/
 ├── 📜 SKILL.md            # → Hermes Agent Skill（核心）
 │                           #   加载后 agent 拥有全部项目管理知识
 └── 🔗 关联项目
-    └── Hawaiine/mihomo-rules   # 105 品牌 · 32 万+ 规则 · 每日同步
+    └── Hawaiine/mihomo-rules   # 106 品牌 · 32 万+ 规则 · 每日同步
 ```
 
 > 设计原则：**SKILL.md 即知识库**，README 是入口说明，不拆分多余目录。保持单文件可加载、零依赖。
@@ -104,7 +104,7 @@ cp mihomo-rules-skill/SKILL.md ~/.hermes/skills/mihomo-rules-management/
 
 | 资源 | 链接 | 说明 |
 |------|------|------|
-| 📦 **mihomo-rules** | [Hawaiine/mihomo-rules](https://github.com/Hawaiine/mihomo-rules) | 105 品牌 · 32 万+ 规则 · 每日同步 |
+| 📦 **mihomo-rules** | [Hawaiine/mihomo-rules](https://github.com/Hawaiine/mihomo-rules) | 106 品牌 · 32 万+ 规则 · 每日同步 |
 | ⚡ **Mihomo 内核** | [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) | 开源代理核心 |
 | 🌐 **Oasisic-Icons** | [Hawaiine/Oasisic-Icons](https://github.com/Hawaiine/Oasisic-Icons) | 品牌图标库 |
 | 📡 **v2fly** | [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community) | 上游域名数据 |
