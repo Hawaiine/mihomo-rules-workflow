@@ -20,7 +20,7 @@ metadata:
 
 ## Overview
 
-Manage a mihomo-compatible RULE-SET-level proxy ruleset repository (105 brands, 320k+ rules). The project syncs upstream domain lists from multiple sources, validates YAML format with auto-fix, generates platform-specific configs for OpenWrt Nikki and Clash for Android, injects brand icons from Oasisic-Icons, and notifies via Discord webhook.
+Manage a mihomo-compatible RULE-SET-level proxy ruleset repository (106 brands, 32万+ rules). The project syncs upstream domain lists from multiple sources, validates YAML format with auto-fix, generates platform-specific configs for OpenWrt Nikki and Clash for Android, injects brand icons from Oasisic-Icons, and notifies via Discord webhook.
 
 ## When to Use
 
